@@ -1,4 +1,5 @@
 import 'package:badge_hack/states/game_state.dart';
+import 'package:badge_hack/states/nfc_global.dart';
 import 'package:badge_hack/states/scan_nfc_state.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,12 @@ class GameStateManager extends StatefulWidget {
 }
 
 class GameStateManagerState extends State<GameStateManager> {
+  @override
+  void initState() {
+    NfcGlobal.startSession();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

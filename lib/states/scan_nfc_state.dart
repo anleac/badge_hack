@@ -1,6 +1,7 @@
 import 'package:badge_hack/constants.dart';
 import 'package:badge_hack/global_vars.dart';
 import 'package:badge_hack/nfc_helper.dart';
+import 'package:badge_hack/states/nfc_global.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 
@@ -17,12 +18,7 @@ class _ScanNfcStateState extends State<ScanNfcState> {
   @override
   void initState() {
     // Start Session
-    NfcManager.instance.startSession(
-      onDiscovered: (NfcTag tag) async {
-        setState(() => _scannedTag = tag);
-      },
-    );
-
+    NfcGlobal.newTag = (tag) => setState(() => _scannedTag = tag);
     super.initState();
   }
 
@@ -40,16 +36,16 @@ class _ScanNfcStateState extends State<ScanNfcState> {
       ),
       floatingActionButton: _scannedTag != null
           ? FloatingActionButton(
-              onPressed: () {
+              onPressed: () async {
                 GlobalVars.regenerateRandomFromNfcHash(_scannedTag!.handle);
-                Navigator.pushNamed(
+                await Navigator.pushNamed(
                   context,
                   '/game',
                   arguments: <String, NfcTag>{
                     Constants.nfcArgumentKey: _scannedTag!,
                   },
                 );
-
+                NfcGlobal.newTag = (tag) => setState(() => _scannedTag = tag);
                 setState(() => _scannedTag = null);
               },
               child: const Icon(Icons.arrow_forward),
@@ -70,7 +66,8 @@ class _ScanNfcStateState extends State<ScanNfcState> {
     return [
       const Text('Ready to play!'),
       const SizedBox(height: 30),
-      Text("Current game has a highscore of ${NfcHelper.getHighscore(_scannedTag)}"),
+      Text(
+          "Current game has a highscore of ${NfcHelper.getHighscore(_scannedTag)}"),
     ];
   }
 }
