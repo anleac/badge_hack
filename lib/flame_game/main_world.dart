@@ -6,16 +6,13 @@ import 'package:badge_hack/global_vars.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 
-class MainWorld extends World with HasGameReference<MainGame>, HasCollisionDetection {
+class MainWorld extends World
+    with HasGameReference<MainGame>, HasCollisionDetection {
   late final TextComponent _scoreText = TextComponent(text: 'Score: 0')
     ..anchor = Anchor.center
     ..position = Vector2(game.size.x / 2, 20);
 
-  late Blob blob = Blob()
-    ..anchor = Anchor.center
-    ..position = _initialPlayerPosition;
-
-  late final Vector2 _initialPlayerPosition = Vector2(game.size.x / 2, 5);
+  late Blob blob = Blob()..anchor = Anchor.center;
 
   double _timeAlive = 0;
   int get score => _timeAlive.floor();
@@ -41,7 +38,8 @@ class MainWorld extends World with HasGameReference<MainGame>, HasCollisionDetec
     for (var i = 0; i < 50; i++) {
       final spike = Spike()
         ..anchor = Anchor.center
-        ..position = Vector2(i * 20.0, GlobalVars.random.nextDouble() * game.size.y * 10);
+        ..position = Vector2(
+            i * 20.0, GlobalVars.random.nextDouble() * game.size.y * 10);
 
       add(spike);
     }
@@ -60,7 +58,7 @@ class MainWorld extends World with HasGameReference<MainGame>, HasCollisionDetec
   void reset() {
     _timeAlive = 0;
     blob.reset();
-    blob.position = _initialPlayerPosition;
+    //blob.position = _initialPlayerPosition;
 
     game.overlays.remove(Constants.gameOverOverlayKey);
 

@@ -10,7 +10,8 @@ import 'package:flame/components.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
-class Blob extends SpriteComponent with CollisionCallbacks, HasGameReference<MainGame> {
+class Blob extends SpriteComponent
+    with CollisionCallbacks, HasGameReference<MainGame> {
   late int _timeSinceLastGyroEvent = DateTime.now().microsecondsSinceEpoch;
 
   bool _isAlive = true;
