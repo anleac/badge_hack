@@ -61,6 +61,7 @@ class _GameStateState extends State<GameState> {
                             ),
                             ElevatedButton(
                               onPressed: () {
+                                game.overlays.remove(Constants.gameOverOverlayKey);
                                 Navigator.pop(context);
                               },
                               child: const Text('Exit'),
