@@ -14,6 +14,7 @@ class ScanNfcState extends StatefulWidget {
 
 class _ScanNfcStateState extends State<ScanNfcState> {
   NfcTag? _scannedTag;
+  int scannedScore = 0;
 
   @override
   void initState() {
@@ -41,8 +42,8 @@ class _ScanNfcStateState extends State<ScanNfcState> {
                 await Navigator.pushNamed(
                   context,
                   '/game',
-                  arguments: <String, NfcTag>{
-                    Constants.nfcArgumentKey: _scannedTag!,
+                  arguments: <String, int>{
+                    Constants.nfcArgumentKey: scannedScore,
                   },
                 );
                 NfcGlobal.newTag = (tag) => setState(() => _scannedTag = tag);
@@ -66,8 +67,17 @@ class _ScanNfcStateState extends State<ScanNfcState> {
     return [
       const Text('Ready to play!'),
       const SizedBox(height: 30),
-      Text(
-          "Current game has a highscore of ${NfcHelper.getHighscore(_scannedTag)}"),
+      FutureBuilder(
+          future: NfcHelper.getHighscore(_scannedTag),
+          builder: (context, snapshot) {
+            if (snapshot.hasData == false) {
+              return Text("wuuuuuurst");
+            } else {
+              scannedScore = snapshot.data ?? 0;
+              return Text(
+                  "Current game has a highscore of ${snapshot.data ?? 0}");
+            }
+          })
     ];
   }
 }

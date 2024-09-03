@@ -1,6 +1,8 @@
 import 'package:badge_hack/constants.dart';
 import 'package:badge_hack/flame_game/main_game.dart';
 import 'package:badge_hack/flame_game/main_world.dart';
+import 'package:badge_hack/nfc_helper.dart';
+import 'package:badge_hack/states/nfc_global.dart';
 import 'package:badge_hack/widgets/background.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
@@ -21,9 +23,7 @@ class _GameStateState extends State<GameState> {
   @override
   Widget build(BuildContext context) {
     final args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, NfcTag>?;
-    final nfcTag = args?[Constants.nfcArgumentKey];
-
+        ModalRoute.of(context)?.settings.arguments as Map<String, int>?;
     return Scaffold(
       body: SafeArea(
         child: PopScope(
@@ -55,6 +55,27 @@ class _GameStateState extends State<GameState> {
                           ),
                         ),
                         const SizedBox(height: 30),
+                        if (((game as MainGame).world as MainWorld).score >
+                            (args!.values.first ?? 0))
+                          ElevatedButton(
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                      "Please put an NFC tag to your phone")));
+                              NfcGlobal.newTag = (tag) {
+                                Ndef.from(tag)!.write(NdefMessage(<NdefRecord>[
+                                  NdefRecord.createText(
+                                      ((game as MainGame).world as MainWorld)
+                                          .score
+                                          .toString(),
+                                      languageCode: "")
+                                ]));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text("Done")));
+                              };
+                            },
+                            child: const Text('Store score'),
+                          ),
                         ElevatedButton(
                           onPressed: () {
                             ((game as MainGame).world as MainWorld).reset();
