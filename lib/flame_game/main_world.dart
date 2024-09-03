@@ -81,7 +81,7 @@ class MainWorld extends World with HasGameReference<MainGame>, HasCollisionDetec
   void reset() {
     _timeAlive = 0;
     blob.reset();
-    blob.position = Vector2.zero();
+    // blob.position = Vector2.zero();
 
     game.overlays.remove(Constants.gameOverOverlayKey);
 
